@@ -1,25 +1,20 @@
 const express = require("express");
+const bodyParser = require("body-parser");
+const authrouter = require("./routes/admin/auth");
+const cookieSession = require("cookie-session");
+
 const app = express();
 const port = 3000;
 
-app.use(express.static("public"));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(authrouter);
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
-
-app.get("/login", (req, res) => {
-  res.send("Login Page");
-});
-
-app.get("/signup", (req, res) => {
-  res.send("Signup Page");
-});
-
-app.get("/products", (req, res) => {
-  res.send("products Page");
-});
+app.use(
+  cookieSession({
+    keys: ["lkasld235j"],
+  })
+);
 
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
+  console.log(`listening at http://localhost:${port}`);
 });
