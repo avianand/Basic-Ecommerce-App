@@ -26,15 +26,22 @@ class UserRepository {
     );
   }
 
-  async create(attr) {
-    // const { email, passoword } = attr;
-    const data = await this.getAll();
-    data.push(attr);
-    const newRecord = await fs.promises.writeFile(
+  async writeAll(data) {
+      await fs.promises.writeFile(
       this.filename,
       JSON.stringify(data)
     );
   }
+  async create(attr) {
+    // const { email, passoword } = attr;
+    const data = await this.getAll();
+    data.push(attr);
+    const writeData = await this.writeAll(data)
+  }
+
+  
+
+  async update(attr) {}
 }
 
 const test = async () => {

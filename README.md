@@ -46,4 +46,5 @@ Steps:
         b. parse the content to JSON
         c. return the parsed content
 28. Write a create() function next to create a record in users.json file.
-
+29. Seperate write file logic from create. as write file will be used frquently.
+30. 
