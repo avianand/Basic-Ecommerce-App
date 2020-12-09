@@ -1,6 +1,9 @@
 const fs = require("fs");
 const { report } = require("../routes/admin/auth");
 const crypto = require("crypto");
+const util = require("util");
+
+const scrypt = util.promisify(crypto.scrypt);
 class UserRepository {
   constructor(filename) {
     if (!filename) {
@@ -27,27 +30,49 @@ class UserRepository {
     );
   }
 
+  async comparePassword(saved, supplied){
+     const result =  saved.split('.')
+     const hashed = result[0]
+     const salt = result[1]
+    console.log("hashed: ", hashed)
+    console.log("salt: ", salt)
+    const suppliedHash = await scrypt(supplied, salt, 64)
+    const suppliedHashedPassword = suppliedHash.toString('hex')
+
+    if(suppliedHashedPassword === hashed){
+      return true
+    }else{
+      return false
+    }
+  }
+
+  async create(attrs) {
   
-  async create(attr) {
-    // const { email, passoword } = attr;
-    attr.id = this.randomId();
+    attrs.id = this.randomId();
 
     const records = await this.getAll();
-    
-    records.push(attr);
+    const salt = crypto.randomBytes(8).toString("hex");
+    const hashedPassword = await scrypt(attrs.password, salt, 64);
+
+    const record = {
+      ...attrs,
+      password: `${hashedPassword.toString("hex")}.${salt}`,
+    };
+
+    records.push(record);
 
     await this.writeAll(records);
 
-    return attr;
+    return record;
   }
 
   async writeAll(records) {
     await fs.promises.writeFile(
-        this.filename, 
-        JSON.stringify(records, null, 2)
-      );
+      this.filename,
+      JSON.stringify(records, null, 2)
+    );
   }
-  
+
   randomId() {
     return crypto.randomBytes(4).toString("hex");
   }
@@ -61,7 +86,6 @@ class UserRepository {
     const records = await this.getAll();
     const newrecords = records.filter((record) => record.id !== id);
     await this.writeAll(newrecords);
-  
   }
 
   async update(id, attr) {
@@ -73,26 +97,24 @@ class UserRepository {
     }
     await Object.assign(record, attr);
     await this.writeAll(records);
-  
   }
 
   async getOneBy(filters) {
-    
     const records = await this.getAll();
 
     for (let record of records) {
       let found = true;
 
-      for  (let key in filters)  {
-        if  (record[key] !== filters[key])  {
+      for (let key in filters) {
+        if (record[key] !== filters[key]) {
           found = false;
-        } 
+        }
       }
 
       if (found) {
-        return record
+        return record;
       }
-    }  
+    }
   }
 
   async getManyBy(filters) {
@@ -101,21 +123,19 @@ class UserRepository {
     for (let record of records) {
       let found = true;
 
-      for  (let key in filters)  {
-        if  (record[key] !== filters[key])  {
+      for (let key in filters) {
+        if (record[key] !== filters[key]) {
           found = false;
         }
-        
       }
 
       if (found) {
-        foundRecords.push(record)
+        foundRecords.push(record);
       }
     }
     return foundRecords;
   }
 }
-
 
 // const test = async () => {
 //   const repo = new UserRepository("users.json");
@@ -130,4 +150,5 @@ class UserRepository {
 //   console.log(user);
 // };
 // test();
+
 module.exports = new UserRepository('users.json')

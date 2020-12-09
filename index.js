@@ -8,12 +8,8 @@ const port = 3000;
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(
-  cookieSession({
-    keys: ["abcdefgh"],
-  })
-);
+app.use(cookieSession({ keys: ["abcdefgh"] }));
 app.use(authrouter);
-app.listen(port, () => {;;;
+app.listen(port, () => {
   console.log(`listening at http://localhost:${port}`);
-})
+});

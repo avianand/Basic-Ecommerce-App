@@ -66,4 +66,15 @@ Steps:
         1. email should be unique.
         2. password and password confirmation should be same.
         3. Create an account if all passes.
-37. Use cookies to manage session and provide authentication. Use cookie-session library
+37. Use cookies to manage session and provide authentication. Use cookie-session library.
+38. write the function to accept signin request. similar to signup.
+        Signin function should check if email exists.
+        Then check the passwords.
+39. Use hashing+salting for password storage for securing storing password in DB.
+        put the logic to generate hashing and salting in user.js file in create function.
+        Use Crypto.scrypt function encrypt password with salt.
+        use promise based version to use async await syntax and handle password easily.
+        Salt of the password is saved with the hashed password with a dot seperator.
+40. Now create signin method using hashed password comparision. Create a new function called comparePassword
+        to compare hashed passwords.
+41. 
