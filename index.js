@@ -7,14 +7,13 @@ const app = express();
 const port = 3000;
 
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(authrouter);
 
 app.use(
   cookieSession({
-    keys: ["lkasld235j"],
+    keys: ["abcdefgh"],
   })
 );
-
-app.listen(port, () => {
+app.use(authrouter);
+app.listen(port, () => {;;;
   console.log(`listening at http://localhost:${port}`);
-});
+})

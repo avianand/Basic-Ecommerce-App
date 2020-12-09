@@ -42,9 +42,28 @@ Steps:
 26. Use the promise based version of the fs library to read/edit contents of files as it is easier to handle.
         User promises wherever possible.
 27. Now create getAll (to get data) function.
-        a. open and read contents of the file.
+        a. open and read all contents of the file.
         b. parse the content to JSON
         c. return the parsed content
-28. Write a create() function next to create a record in users.json file.
-29. Seperate write file logic from create. as write file will be used frquently.
-30. 
+28. Write a create() function to create a record in users.json file.
+        get all records. Add new record. write all the records back to file.
+29. Seperate writeAll function logic from create. as writeAll function will be used frquently.
+30. Create a randomId generator to generate id or unique identifier for records in user.json.
+        use crypto module for genrating random string of chars.
+31. Now create function getOne to retrieve record for a particular ID.
+        use Array.find method.
+32. Delete function. Create a delete function similar to that of getOne.
+        fetch all records. Find one record. delete that record. writeAll back to file.
+33. Update function is little more complex. Find record by the id first, then to update/add details to record,
+        use Object.assign function of Javascript. (check MDN)
+34. GetOneBy method. (find a record with filters)
+        iterate through all idexes of array of objects. (for of loop (in array))
+        iterate through all key value pair of the filters object. (for in loop(in object))
+        match the value of database records with the filters object values.
+35. Set the export line and instatiate the class. instead of exporting the entire class, export an instance of the class.
+        We can do this because in our case we only need one instance of our users.json file/db.
+36. Handle the signup functional.
+        1. email should be unique.
+        2. password and password confirmation should be same.
+        3. Create an account if all passes.
+37. Use cookies to manage session and provide authentication. Use cookie-session library
