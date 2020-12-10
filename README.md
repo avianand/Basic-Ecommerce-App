@@ -75,6 +75,16 @@ Steps:
         Use Crypto.scrypt function encrypt password with salt.
         use promise based version to use async await syntax and handle password easily.
         Salt of the password is saved with the hashed password with a dot seperator.
-40. Now create signin method using hashed password comparision. Create a new function called comparePassword
-        to compare hashed passwords.
-41. 
+40. Now create signin method using hashed password comparision. 
+        Create a new function called comparePassword to compare hashed passwords.
+        Extract the salt from the stored data in db and use it to create a hash with entered password.
+        now compare the generated hashed password with the hashed password stored in DB.
+        e.g. in db we have : password : hashedPassword.salt
+        extract the hashedPassword and salt into 2 variables using split function.
+        use the salt and the entered password to generate newhashedPassword.
+        now compare newhashedPassword with hashed password.
+41. Validation. Use express-validator library. Install it first.
+        Visit documentation and add the basic validations. i.e. isEmail, length.
+        Add Sanitization using the same library. i.e. trim
+42. Add custom validations by refering to the documentation and also add custom error messages.
+43. 

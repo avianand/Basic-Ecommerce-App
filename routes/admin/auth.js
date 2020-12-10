@@ -3,7 +3,7 @@ const signInTemplate = require("../../views/admin/signin");
 const signUpTemplate = require("../../views/admin/signup");
 const UserRepo = require("../../repositories/user");
 const { comparePassword } = require("../../repositories/user");
-
+const { body, validationResult } = require('express-validator');
 
 const router = express.Router();
 
@@ -11,24 +11,45 @@ router.get("/signup", (req, res) => {
   res.send(signUpTemplate({ req }));
 });
 
-router.post("/signup", async (req, res) => {
-
-  const { email, password, passwordConfirmation } = req.body;
-
-  if (password !== passwordConfirmation) {
-    return res.send('Passwords don\'t match');
-  } 
-
-  const existingUser = await UserRepo.getOneBy({ email });
+router.post("/signup",[ 
+  body('email')
+  .trim()
+  .not().isEmpty()
+  .withMessage('email cannot be empty')
+  .isEmail()
+  .withMessage('Invalid email format')
+  .normalizeEmail()
+  .custom(async value => {
+    return await UserRepo.getOneBy({ value }).then(user => {
+      if (user) {
+        return Promise.reject('E-mail already in use');
+      }
+    });
+  }),
+  body('password')
+  .trim()
+  .isLength({ min: 5 })
+  .withMessage('must be at least 5 chars long'),
+  body('passwordConfirmation')
+  .trim()
+  .isLength({ min: 5 })
+  .custom((value, { req }) => {
+    if (value !== req.body.password) {
+      throw new Error('Password confirmation does not match password');
+    }
+    return true;
+  })
+  ], async (req, res) => {
   
-  if (existingUser) {
-    return res.send('Email in use');
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    console.log(errors) 
   }
-  
+  const { email, password } = req.body;
+ 
     const user = await UserRepo.create({email, password}) 
     req.session.userId = user.id
-    return res.send("Account Created");
-  
+    return res.send("Account Created"); 
 
 });
 

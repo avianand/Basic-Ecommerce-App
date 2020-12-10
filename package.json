@@ -27,6 +27,7 @@
     "cookie-session": "^1.4.0",
     "crypto": "^1.0.1",
     "express": "^4.17.1",
+    "express-validator": "^6.8.0",
     "nodemon": "^2.0.6"
   }
 }
